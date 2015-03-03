@@ -1,0 +1,19 @@
+{
+  "name": "siilid",
+  "version": "0.0.0",
+  "authors": [
+    "Mark K Cowan <mark@battlesnake.co.uk>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "underscore": "~1.8.2"
+  }
+}
