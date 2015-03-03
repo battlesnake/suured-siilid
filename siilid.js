@@ -2,9 +2,12 @@
 
 var canvas, sprites;
 
+var _ = require('underscore');
+var keyframes = require('./data/keyframes');
 var dom = require('./dom');
+var animation = require('./animation');
 
-window.addEventListener('load', init);
+window.keyframesLoaded = init;
 
 function init() {
 	canvas = dom.byId('canvas');
@@ -43,8 +46,18 @@ function init() {
 
 function start() {
 	var keys = ['walk1', 'stand', 'walk2', 'stand'];
-	debugger;
 	var el = sprites.stand.template.clone();
 	el.appendTo(canvas)
 		.transform(['+', 400, 200]);
+	var anim = animation.create(el.get(), Infinity);
+	anim
+		.transition({ path: sprites.walk1.path }, 600, 'ease')
+		.delay(1000)
+		.transition({ path: sprites.stand.path }, 600, 'ease')
+		.delay(1000)
+		.transition({ path: sprites.walk2.path }, 600, 'ease')
+		.delay(1000)
+		.transition({ path: sprites.stand.path }, 600, 'ease')
+		.start()
+		;
 }

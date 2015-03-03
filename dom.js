@@ -1,5 +1,7 @@
 /* Minimal d3/jQ-like library, does not support multiple elements */
 
+var _ = require('underscore');
+
 var format = require('./format');
 
 Wrapper.prototype = {
@@ -40,7 +42,7 @@ function polywrap(fn) {
 
 function evil(val) {
 	if (typeof val === 'function') {
-		return val.bind(self)(self);
+		return val.bind(this)(this);
 	} else {
 		return val;
 	}
@@ -50,7 +52,7 @@ function evil(val) {
 
 function dom(el) {
 	if (!el) {
-		debugger;
+		throw new Error('No element provided');
 	}
 	return el ? new Wrapper(el) : null;
 }

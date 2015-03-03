@@ -84,7 +84,7 @@ function help() {
 		'\t{id} specifies the ID attribute of the element to measure the bounding box of.  Default is all items inside the first <defs> tag which have an id attribute.',
 		'\thtml-wrap generates a HTML document that <use>s the image specified by {file}#{id}, then measures the bounding box of that <use> element.  {w} and {h} are the width and height for the viewBox.',
 		'\t{save} is used by format "IMAGE".  "image-{id}.png" will have the "{id}" part replaced with the element id.  Likewise, use "{index}" to replace with zero-based index of id in passed id list.',
-		'\t{varname} prepends "var {varname}=" to the JSON output, ideal for embedding the result via <script> tag.'
+		'\t{varname} prepends "var {varname}=" to the JSON output, ideal for embedding the result via <script> tag.  Prepend ^ to omit the "var" (e.g. for browserify).'
 	].forEach(function (s) { console.warn(s); });
 	phantom.exit(1);
 }
@@ -149,7 +149,9 @@ function run() {
 		return memo;
 	}, {});
 	
-	console.info((varName ? 'var ' + varName + '=' : '') + JSON.stringify(result));
+	var prefix = varName ? (varName.charAt(0) === '^' ? varName.substr(1) : 'var ' + varName) + '=' : '';
+
+	console.info(prefix + JSON.stringify(result));
 	/* exit phantom */
 	phantom.exit();
 }

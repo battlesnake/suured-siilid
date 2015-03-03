@@ -1,10 +1,10 @@
 out=out
+data=data
 
-targetnames=keyframes.svg keyframes.svg.js bower_scripts.js bower_styles.css scripts.js styles.css $(pages)
+targetnames=keyframes.svg scripts.js styles.css $(pages)
 targets=$(targetnames:%=$(out)/%)
 
-bower_styles=
-bower_scripts=underscore/underscore.js
+svgdata=$(patsubst %.svg,$(data)/%.js,$(wildcard *.svg))
 
 styles=$(wildcard *.css)
 scripts=$(wildcard *.js)
@@ -20,15 +20,31 @@ cat=cat -- /dev/null
 
 uglifyjs=uglifyjs /dev/null --source-map-include-sources 
 uglifycss=uglifycss /dev/null
+browserify=browserify
+phantomjs=phantomjs
+
+ifeq ($(filter clean,$(MAKECMDGOALS)),)
+ifeq ($(wildcard node_modules),)
+dummy:=$(shell npm install)
+endif
+endif
 
 ifeq ($(filter $(MAKECMDGOALS),release),release)
 out:=$(out)/release
 uglifyjs_opts=-c -m
+browserify_opts=
 else
 uglifyjs_opts=-b
+browserify_opts=-d
 endif
 
-.PHONY: release all clean
+PATH:=$(PWD)/node_modules/.bin:$(PATH)
+
+ifeq ($(wildcard node_modules),)
+MAKECMDGOALS:=node_modules $(MAKECMDGOALS)
+endif
+
+.PHONY: release all clean deps
 
 all: $(targets)
 
@@ -36,29 +52,26 @@ release: all
 	@true
 
 clean:
-	$(rmrf) $(targets) $(out)
+	$(rmrf) $(out) $(data)
 
 $(out):
 	$(mkdirp) $@
 
-bower_components:
-	bower install
+$(data):
+	$(mkdirp) $@
 
-$(out)/bower_styles.css: $(bower_styles:%=bower_components/%) | bower_components
-	$(uglifycss) $^ > $@ || $(rm) $@
+node_modules:
+	npm install
 
 $(out)/styles.css: $(styles)
 	$(uglifycss) $^ > $@ || $(rm) $@
 
-$(out)/bower_scripts.js: $(bower_scripts:%=bower_components/%) | bower_components
-	$(uglifyjs) $(uglifyjs_opts) --source-map $@.map $^ > $@ || $(rm) $@*
+$(out)/scripts.js: $(scripts) $(svgdata) $(data)
+	@#$(uglifyjs) $(uglifyjs_opts) --source-map $@.map $^ > $@ || $(rm) $@*
+	$(browserify) $(browserify_opts) $(main_script) -o $@
 
-$(out)/scripts.js: $(scripts)
-	#$(uglifyjs) $(uglifyjs_opts) --source-map $@.map $^ > $@ || $(rm) $@*
-	browserify -d $(main_script) -o $@
-
-$(out)/%.svg.js: %.svg | $(out)
-	./util/svg-bbox.js $< --var-name $(<:%.svg=%) > $@ || $(rm) $@
+$(data)/%.js: %.svg
+	$(phantomjs) util/svg-bbox.js $< --var-name ^module.exports > $@ || $(rm) $@
 
 $(out)/%: % | $(out)
 	$(cp) $^ $@

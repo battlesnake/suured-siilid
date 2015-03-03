@@ -1,0 +1,26 @@
+{
+  "name": "siilid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "siilid.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/battlesnake/suured-siilid"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/battlesnake/suured-siilid/issues"
+  },
+  "homepage": "https://github.com/battlesnake/suured-siilid",
+  "dependencies": {
+    "browserify": "^9.0.3",
+    "phantomjs": "^1.9.16",
+    "uglify-js": "^2.4.16",
+    "uglifycss": "0.0.11",
+    "underscore": "^1.8.2"
+  }
+}

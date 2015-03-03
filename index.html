@@ -3,15 +3,12 @@
 <head>
 	<meta charset="utf8">
 	<title>SUURED SIILID</title>
-	<script src="bower_scripts.js"></script>
-	<script src="keyframes.svg.js"></script>
-	<script src="scripts.js"></script>
-	<link rel="stylesheet" href="bower_styles.css">
 	<link rel="stylesheet" href="styles.css">
+	<script src="scripts.js"></script>
 </head>
 <body>
-	<object type="image/svg+xml" data="keyframes.svg" id="keyframes">
-	</object>
+	<iframe src="keyframes.svg" id="keyframes" onload="keyframesLoaded()">
+	</iframe>
 	<svg id="canvas" preserveAspectRatio="xMidYMax slice" viewBox="0 0 800 400">
 		<rect x="0" y="0" width="800" height="400" stroke="black" stroke-width="5" fill="none"/>
 		<rect x="100" y="50" width="600" height="300" stroke="black" stroke-width="5" fill="none"/>
