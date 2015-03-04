@@ -81,7 +81,7 @@ function help() {
 	[
 		'svg-bbox.js  {file}  [ {id} ] [ {id} ]  [ --html-wrap {w} {h} ]  [ --save {save} ]  [ --var-name {varname} ]  [ --verbose ]',
 		'\tIf {file} is -, data is read from STDIN',
-		'\t{id} specifies the ID attribute of the element to measure the bounding box of.  Default is all items inside the first <defs> tag which have an id attribute.',
+		'\t{id} specifies the ID attribute of the element to measure the bounding box of.  Default is all items which have an id attribute.',
 		'\thtml-wrap generates a HTML document that <use>s the image specified by {file}#{id}, then measures the bounding box of that <use> element.  {w} and {h} are the width and height for the viewBox.',
 		'\t{save} is used by format "IMAGE".  "image-{id}.png" will have the "{id}" part replaced with the element id.  Likewise, use "{index}" to replace with zero-based index of id in passed id list.',
 		'\t{varname} prepends "var {varname}=" to the JSON output, ideal for embedding the result via <script> tag.  Prepend ^ to omit the "var" (e.g. for browserify).'
@@ -199,7 +199,7 @@ function getBBox(id) {
 }
 
 function getBBoxes() {
-	var els = [].slice.apply(document.querySelectorAll('defs>*[id]'));
+	var els = [].slice.apply(document.querySelectorAll('*[id]'));
 	return els.map(function (el) {
 		return {
 			id: el.id,

@@ -66,11 +66,11 @@ node_modules:
 $(out)/styles.css: $(styles)
 	$(uglifycss) $^ > $@ || $(rm) $@
 
-$(out)/scripts.js: $(scripts) $(svgdata) $(data)
+$(out)/scripts.js: $(scripts) $(svgdata)
 	@#$(uglifyjs) $(uglifyjs_opts) --source-map $@.map $^ > $@ || $(rm) $@*
 	$(browserify) $(browserify_opts) $(main_script) -o $@
 
-$(data)/%.js: %.svg
+$(data)/%.js: %.svg $(data)
 	$(phantomjs) util/svg-bbox.js $< --var-name ^module.exports > $@ || $(rm) $@
 
 $(out)/%: % | $(out)

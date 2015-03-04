@@ -3,6 +3,7 @@
 var _ = require('underscore');
 
 var format = require('./format');
+var transform = require('./transform');
 
 Wrapper.prototype = {
 	getAttr: getAttr,
@@ -27,6 +28,7 @@ dom.createHTML = createHTML;
 dom.createSVG = createSVG;
 
 module.exports = dom;
+module.exports.proto = Wrapper.prototype;
 
 /* Helpers */
 
@@ -137,26 +139,5 @@ function unwrap() {
 }
 
 function setTransform(xform) {
-	if (arguments.length > 1) {
-		xform = [].slice.apply(arguments);
-	}
-	if (xform.length === 3 && typeof xform[0] === 'string') {
-		xform = [xform];
-	}
-	var str = _(xform)
-		.map(function (val) {
-			val = [].slice.apply(val);
-			var fn = val.shift();
-			var params = val;
-			console.log(fn, params);
-			if (fn === 'translate' || fn === 't' || fn === '+') {
-				return 'translate($1, $2)'.format(params);
-			} else if (fn === 'rotate' || fn === 'r' || fn === '~') {
-				return 'rotate($1)'.format(params);
-			} else if (fn === 'scale' || fn === 's' || fn === '*') {
-				return 'scale($1)'.format(params);
-			}
-		})
-		.join(', ');
-	this.setAttr('transform', str);
+	this.setAttr('transform', transform.create.apply(null, arguments));
 }

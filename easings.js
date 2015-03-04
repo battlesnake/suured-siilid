@@ -1,14 +1,40 @@
 'use strict';
 
 var easings = module.exports = {
-	linear: linear,
-	stepIn: stepIn,
-	stepOut: stepOut,
-	easeIn: easeIn,
-	easeOut: easeOut,
-	easeInOut: easeInOut,
-	ease: easeInOut
+	linear: clamp(linear),
+	stepIn: clamp(stepIn),
+	stepOut: clamp(stepOut),
+	easeIn: clamp(easeIn),
+	easeOut: clamp(easeOut),
+	easeInOut: clamp(easeInOut),
+	ease: clamp(easeInOut),
+	get: get
 };
+
+function clamp(fn) {
+	return function (t) {
+		if (typeof t !== 'number') {
+			throw new Error('t must be a number');
+		}
+		t = t < 0 ? 0 : t > 1 ? 1 : t;
+		return fn(t);
+	};
+}
+
+function get(easing) {
+	if (!easing) {
+		return linear;
+	} else if (typeof easing === 'string') {
+		var easingName = easing.replace(/-(\w)/g, function (s, a) { return a.toUpperCase(); });
+		if (easingName in easings) {
+			return easings[easingName];
+		} else {
+			throw new Error('Easing "' + easingName + '" not found');
+		}
+	} else {
+		throw new Error('Invalid value for "easing"');
+	}
+}
 
 function linear(t) {
 	return t;
